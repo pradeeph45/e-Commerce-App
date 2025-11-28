@@ -29,17 +29,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.e_commerceapp.AppUtil
 import com.example.e_commerceapp.R
 import com.example.e_commerceapp.viewModel.AuthViewModel
 
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier,authViewModel: AuthViewModel = viewModel()){
+fun RegisterScreen(modifier: Modifier = Modifier, navController: NavHostController ,authViewModel: AuthViewModel = viewModel()){
 
     var email by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
+    var isLoading by remember { mutableStateOf(false) }
     var context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()
@@ -98,15 +99,21 @@ fun RegisterScreen(modifier: Modifier = Modifier,authViewModel: AuthViewModel = 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
+            isLoading = true
             authViewModel.register(email,name,password) {success,errorMessage ->
                 if(success){
-
+                    isLoading = false
+                 navController.navigate("home"){
+                     popUpTo("auth"){inclusive = true}
+                 }
                 }else{
+                    isLoading = false
                     AppUtil.showToast(context,errorMessage?:"Something went wrong")
                 }
             }
-        },modifier = Modifier.fillMaxWidth()) {
-            Text("REGISTER")
+        },  enabled = !isLoading,
+            modifier = Modifier.fillMaxWidth()) {
+            Text(text = if(isLoading) "Creating Account" else "REGISTER")
         }
     }
 }

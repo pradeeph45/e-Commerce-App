@@ -11,8 +11,19 @@ class AuthViewModel : ViewModel() {
     private val _auth = Firebase.auth
     private val _firestore = Firebase.firestore
 
-    fun login(){
-
+    fun login(
+        email: String,
+        password: String,
+        onResult: (Boolean, String?) -> Unit
+    ){
+     _auth.signInWithEmailAndPassword(email,password)
+         .addOnCompleteListener {
+           if(it.isSuccessful){
+               onResult(true, null)
+           }else{
+               onResult(false, it.exception?.localizedMessage)
+           }
+         }
     }
 
     fun register(
@@ -20,7 +31,7 @@ class AuthViewModel : ViewModel() {
         name: String,
         password: String,
         onResult: (Boolean, String?) -> Unit
-    ) {
+    ){
         _auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { authTask ->
 
