@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.e_commerceapp.AppUtil
 import com.example.e_commerceapp.Model.ProductModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -70,10 +71,12 @@ fun ProductDetailsPage(modifier: Modifier = Modifier,productId : String){
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-          Text(product.title,
-              fontWeight = FontWeight.Bold,
-              fontSize = 20.sp,
-              modifier = Modifier.padding(8.dp))
+        Text(
+            product.title,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -103,7 +106,12 @@ fun ProductDetailsPage(modifier: Modifier = Modifier,productId : String){
 
             DotsIndicator(
                 dotCount = product.images.size,
-                type = ShiftIndicatorType(DotGraphic(color = MaterialTheme.colorScheme.primary, size = 6.dp)),
+                type = ShiftIndicatorType(
+                    DotGraphic(
+                        color = MaterialTheme.colorScheme.primary,
+                        size = 6.dp
+                    )
+                ),
                 pagerState = pagerState,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
@@ -116,13 +124,13 @@ fun ProductDetailsPage(modifier: Modifier = Modifier,productId : String){
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "$"+product.price,
+                "$" + product.price,
                 fontSize = 16.sp,
                 style = TextStyle(textDecoration = TextDecoration.LineThrough)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                "$"+product.actualPrice,
+                "$" + product.actualPrice,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -137,39 +145,49 @@ fun ProductDetailsPage(modifier: Modifier = Modifier,productId : String){
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = {},
+        Button(
+            onClick = {
+                AppUtil.addToCart(productId,context)
+            },
             modifier = Modifier.fillMaxWidth()
-                .height(50.dp)) {
+                .height(50.dp)
+        ) {
             Text("Add to Cart", fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Product Description:",
+        Text(
+            "Product Description:",
             fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold)
+            fontWeight = FontWeight.SemiBold
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(product.description,
-            fontSize = 16.sp)
+        Text(
+            product.description,
+            fontSize = 16.sp
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if(product.otherDetails.isNotEmpty())
-        Text("Other product details:",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold)
+        if (product.otherDetails.isNotEmpty()) {
+            Text(
+                "Other product details:",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        product.otherDetails.forEach { (key,value) ->
-            Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
-                Text(key + " : ", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                Text(value, fontSize = 16.sp)
+            product.otherDetails.forEach { (key, value) ->
+                Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+                    Text(key + " : ", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    Text(value, fontSize = 16.sp)
+                }
+
             }
-
         }
     }
-
 }

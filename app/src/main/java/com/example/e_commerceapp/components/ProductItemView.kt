@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.e_commerceapp.AppUtil
 import com.example.e_commerceapp.GlobalNavigation
 import com.example.e_commerceapp.Model.ProductModel
 import network.DebugCoil
@@ -75,7 +76,9 @@ fun ProductItemView(modifier: Modifier = Modifier, item: ProductModel) {
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = {}) {
+                IconButton(onClick = {
+                    AppUtil.addToCart(item.id,context)
+                }) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = "Add to Cart"
