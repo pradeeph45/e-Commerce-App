@@ -2,13 +2,15 @@ package com.example.e_commerceapp.pages
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,6 +19,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.e_commerceapp.AppUtil
+import com.example.e_commerceapp.GlobalNavigation
 import com.example.e_commerceapp.Model.UserModel
 import com.example.e_commerceapp.components.CartItemView
 import com.google.firebase.Firebase
@@ -55,10 +59,20 @@ fun CartPage(modifier: Modifier){
             )
         )
 
-        LazyColumn {
+        LazyColumn{
         items(userModel.value.cartItems.toList(), key = {it.first}) { (productId,qty) ->
             CartItemView(productId = productId, qty = qty)
             }
+        }
+
+        Button(
+            onClick = {
+              GlobalNavigation.navController.navigate("checkout")
+            },
+            modifier = Modifier.fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text("Proceed to Checkout", fontSize = 16.sp)
         }
     }
 }
