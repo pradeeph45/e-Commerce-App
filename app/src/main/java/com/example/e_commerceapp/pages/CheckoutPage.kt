@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.e_commerceapp.AppUtil
+import com.example.e_commerceapp.GlobalNavigation
 import com.example.e_commerceapp.Model.ProductModel
 import com.example.e_commerceapp.Model.UserModel
 import com.google.firebase.Firebase
@@ -102,6 +103,16 @@ fun CheckoutPage(modifier: Modifier = Modifier){
         Spacer(modifier = Modifier.height(16.dp))
         HorizontalDivider()
         RowCheckOutPage("Total",total.value.toString())
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = {
+              GlobalNavigation.navController.navigate("order")
+            },
+            modifier = Modifier.fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text("Pay Now", fontSize = 16.sp)
+        }
     }
 }
 

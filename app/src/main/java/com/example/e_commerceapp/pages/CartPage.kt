@@ -1,5 +1,6 @@
 package com.example.e_commerceapp.pages
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,13 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.e_commerceapp.AppUtil
 import com.example.e_commerceapp.GlobalNavigation
 import com.example.e_commerceapp.Model.UserModel
 import com.example.e_commerceapp.components.CartItemView
@@ -58,21 +59,30 @@ fun CartPage(modifier: Modifier){
                 fontWeight = FontWeight.Bold
             )
         )
-
-        LazyColumn{
-        items(userModel.value.cartItems.toList(), key = {it.first}) { (productId,qty) ->
-            CartItemView(productId = productId, qty = qty)
+        if(userModel.value.cartItems.isNotEmpty()){
+            LazyColumn{
+                items(userModel.value.cartItems.toList(), key = {it.first}) { (productId,qty) ->
+                    CartItemView(productId = productId, qty = qty)
+                }
             }
-        }
 
-        Button(
-            onClick = {
-              GlobalNavigation.navController.navigate("checkout")
-            },
-            modifier = Modifier.fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Text("Proceed to Checkout", fontSize = 16.sp)
+            Button(
+                onClick = {
+                    GlobalNavigation.navController.navigate("checkout")
+                },
+                modifier = Modifier.fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text("Proceed to Checkout", fontSize = 16.sp)
+            }
+        }else{
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Your cart is empty", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            }
         }
     }
 }

@@ -2,10 +2,13 @@ package com.example.e_commerceapp
 
 import android.content.Context
 import android.widget.Toast
+import com.example.e_commerceapp.Model.OrderModel
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import java.util.UUID
 
 object AppUtil {
 
@@ -60,6 +63,31 @@ object AppUtil {
                         }else{
                             showToast(context,"Failed removing item from cart")
                         }
+                    }
+            }
+        }
+    }
+
+    fun clearCartAndAddToOrders(){
+        val userDoc = Firebase.firestore.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser?.uid!!)
+
+        userDoc.get().addOnCompleteListener {
+            if(it.isSuccessful){
+                val currentCart = it.result.get("cartItems") as? Map<String, Long> ?: emptyMap()
+                val order = OrderModel(
+                    id = "ORD_" + UUID.randomUUID().toString().replace("-","").take(10).uppercase(),
+                    userId = FirebaseAuth.getInstance().currentUser?.uid!!,
+                     date = Timestamp.now(),
+                    items = currentCart,
+                    status = "ORDERED",
+                    address = it.result.get("address") as String
+                )
+                Firebase.firestore.collection("orders")
+                    .document(order.id).set(order)
+                    .addOnCompleteListener {
+                        if(it.isSuccessful)
+                            userDoc.update("cartItems", FieldValue.delete())
                     }
             }
         }
