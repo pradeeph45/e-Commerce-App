@@ -1,6 +1,7 @@
 package com.example.e_commerceapp.pages
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,9 +32,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import com.example.e_commerceapp.AppUtil
+import com.example.e_commerceapp.GlobalNavigation
 
 @Composable
 fun ProfilePage(modifier: Modifier){
@@ -86,7 +90,8 @@ fun ProfilePage(modifier: Modifier){
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium)
 
-        TextField(value = addressInput, onValueChange = {
+        TextField(modifier = Modifier.fillMaxWidth()
+            ,value = addressInput, onValueChange = {
             addressInput = it
         },
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
@@ -107,7 +112,33 @@ fun ProfilePage(modifier: Modifier){
 
             }))
 
+        Spacer(modifier = Modifier.height(12.dp))
 
+        Text("Email:",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium)
+        Text(userModel.value.email)
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text("View my orders",
+                fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.fillMaxWidth()
+                .clickable{
+                   GlobalNavigation.navController.navigate("orders")
+                }.padding(vertical = 16.dp))
+
+        TextButton(onClick = {
+            FirebaseAuth.getInstance().signOut()
+            val navController = GlobalNavigation.navController
+            navController.popBackStack()
+               navController.navigate("auth")
+        },
+            modifier = Modifier.fillMaxWidth()
+                .align(Alignment.CenterHorizontally)) {
+            Text("Sign Out", fontSize = 18.sp)
+        }
     }
 
 }
