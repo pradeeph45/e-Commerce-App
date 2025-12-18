@@ -14,8 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,6 +51,9 @@ import network.DebugCoil
 fun ProductDetailsPage(modifier: Modifier = Modifier,productId : String){
     var product by remember { mutableStateOf(ProductModel()) }
     val context = LocalContext.current
+
+    var isFav = remember { mutableStateOf(AppUtil.checkFavourite(context,productId)) }
+
     val debugImageLoader = remember {
         DebugCoil.createDebugImageLoader(context)
     }
@@ -135,9 +138,12 @@ fun ProductDetailsPage(modifier: Modifier = Modifier,productId : String){
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+              AppUtil.addOrRemoveFromFavourite(context,productId)
+                isFav.value = AppUtil.checkFavourite(context,productId)
+            }) {
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
+                    imageVector = if(isFav.value) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Add to Favorite"
                 )
             }

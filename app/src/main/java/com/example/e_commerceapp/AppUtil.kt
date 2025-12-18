@@ -11,6 +11,7 @@ import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.UUID
+import androidx.core.content.edit
 
 object AppUtil {
 
@@ -106,5 +107,37 @@ object AppUtil {
     fun formatDate(timestamp: Timestamp) : String{
         val sdf = SimpleDateFormat("dd MMM yyyy, hh:mm a",Locale.getDefault())
         return sdf.format(timestamp.toDate().time)
+    }
+
+    private const val _PREF_NAME = "favourite_pref"
+    private const val KEY_FAVOURITES = "favourite_list"
+
+
+    fun addOrRemoveFromFavourite(context: Context,productId: String){
+     val list = getFavouriteList(context).toMutableSet()
+        if(list.contains(productId)){
+            list.remove(productId)
+            showToast(context,"Item removed from Favourites")
+        }else{
+            list.add(productId)
+            showToast(context,"Item added to Favourites")
+        }
+        val prefs = context.getSharedPreferences(_PREF_NAME, Context.MODE_PRIVATE)
+
+        prefs.edit{
+            putStringSet(KEY_FAVOURITES,list)
+        }
+    }
+
+    fun checkFavourite(context: Context,productId: String) : Boolean{
+        if(getFavouriteList(context).contains(productId))
+            return true
+    return false
+    }
+
+    fun getFavouriteList(context: Context) : Set<String>{
+    val prefs = context.getSharedPreferences(_PREF_NAME, Context.MODE_PRIVATE)
+        return prefs.getStringSet(KEY_FAVOURITES,emptySet()) ?: emptySet()
+
     }
 }
